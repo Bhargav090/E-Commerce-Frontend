@@ -7,7 +7,7 @@ import { store } from '../App';
 
 const Login = () => {
   const [isUser, setIsUser] = useState(false);
-  const { token, setToken } = useContext(store);
+  const {setToken } = useContext(store);
 
   const login = async (e) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import url from '../url';
@@ -11,11 +11,7 @@ const Cart = () => {
   const [status, setStatus] = useState('loading');
   const { token } = useContext(store); 
 
-  useEffect(() => {
-    fetchCartItems();
-  }, [token]);
-
-  const fetchCartItems = async () => {
+  const fetchCartItems = useCallback(async () => {
     if (!token) {
       console.error("Token is missing!");
       setStatus('error');
@@ -35,19 +31,17 @@ const Cart = () => {
       console.error("Error fetching cart items: ", err);
       setStatus('error');
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchCartItems();
+    }
+  }, [token, fetchCartItems]);
 
   const totalAmount = () => {
     return cartproducts.reduce((total, item) => total + item.P_Cost * item.Qty, 0);
   };
-
-  if (status === 'loading') {
-    return <center>Loading...</center>;
-  }
-
-  if (status === 'error') {
-    return <div>Error loading cart items. Please try again later.</div>;
-  }
 
   return (
     <div>
@@ -57,26 +51,34 @@ const Cart = () => {
         <NavLink to='/about' className='aboutcs'>About</NavLink>
         <NavLink to='/contact' className='contactcs'>Contact</NavLink>
       </div>
-      <h2 className='cart-h2'>Your Cart Items:</h2>
-      <h2 className='cart-h2'>Total Cart Value: ₹{totalAmount()}</h2>
-      <div className="product-list">
-        {cartproducts.map((cartproduct) => (
-          <Cartcard
-            key={cartproduct._id} // Added key prop for unique identification
-            id={cartproduct.P_Id}
-            image={cartproduct.P_Image}
-            name={cartproduct.P_Name}
-            cost={cartproduct.P_Cost}
-            qty={cartproduct.Qty}
-          />
-        ))}
-      </div>
-      <center>
-        <div className='buy-div'>
-          <h2>Total Amount : ₹{totalAmount()}</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <button className='buy-btn'>Buy Now</button>
-        </div>
-      </center>
+      {status === 'loading' ? (
+        <center>Loading...</center>
+      ) : status === 'error' ? (
+        <div>Error loading cart items. Please try again later.</div>
+      ) : (
+        <>
+          <h2 className='cart-h2'>Your Cart Items:</h2>
+          <h2 className='cart-h2'>Total Cart Value: ₹{totalAmount()}</h2>
+          <div className="product-list">
+            {cartproducts.map((cartproduct) => (
+              <Cartcard
+                key={cartproduct._id} // Added key prop for unique identification
+                id={cartproduct.P_Id}
+                image={cartproduct.P_Image}
+                name={cartproduct.P_Name}
+                cost={cartproduct.P_Cost}
+                qty={cartproduct.Qty}
+              />
+            ))}
+          </div>
+          <center>
+            <div className='buy-div'>
+              <h2>Total Amount : ₹{totalAmount()}</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <button className='buy-btn'>Buy Now</button>
+            </div>
+          </center>
+        </>
+      )}
     </div>
   );
 };
