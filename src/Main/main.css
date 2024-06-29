@@ -1,0 +1,50 @@
+*{
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+.navbar{
+    display: flex;
+    justify-content: space-around;
+    background-color: black;
+    height: 10vh;
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 10px;
+    margin-top: 1%;
+    
+}
+.navbar a{
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 1%;
+    color: white;
+}
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+.buy-div{
+    display: flex;
+    justify-content: center;
+    margin: 3%;
+}
+.buy-btn{
+    background-color: black;
+    border-radius: 10px;
+    color: white;
+    width: 20%;
+    height: 7vh;
+}
+.cart-h2{
+    margin-left: 10%;
+    margin-top: 1%;
+}
+.homeh1{
+    color: white;
+    margin: 1%;
+    color: aqua;
+}
